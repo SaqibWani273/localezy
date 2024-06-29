@@ -1,6 +1,7 @@
 package com.saqib.localezy.service;
 
 import com.saqib.localezy.entity.Customer;
+import com.saqib.localezy.record.EmailPasswordRecord;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ public interface CustomerService {
 
     //login
 
-    ResponseEntity<?> loginCustomer(Customer customer);
+    ResponseEntity<?> loginCustomer(EmailPasswordRecord emailPasswordRecord);
 
     //email verification
 

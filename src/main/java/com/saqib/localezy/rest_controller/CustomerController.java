@@ -2,6 +2,7 @@ package com.saqib.localezy.rest_controller;
 
 
 import com.saqib.localezy.entity.Customer;
+import com.saqib.localezy.record.EmailPasswordRecord;
 import com.saqib.localezy.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class CustomerController {
     //register endpoint
     @PostMapping("/register")
     public ResponseEntity<?> registerCustomer(@RequestBody Customer customer) {
-        //should contain email, username and password
+        //should atleast contain email, username and password
         System.out.println("customer -> " + customer.toString());
         return customerService.registerCustomer(customer);
     }
@@ -38,8 +39,9 @@ public class CustomerController {
 
     //login endpoint
     @GetMapping("/login")
-    public ResponseEntity<?> loginCustomer(Customer customer) {
-        return customerService.loginCustomer(customer);
+    public ResponseEntity<?> loginCustomer(@RequestBody EmailPasswordRecord emailPasswordRecord) {
+        //should atleast contain email and password
+        return customerService.loginCustomer(emailPasswordRecord);
     }
 
 }

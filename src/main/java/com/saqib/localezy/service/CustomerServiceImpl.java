@@ -2,6 +2,7 @@ package com.saqib.localezy.service;
 
 import com.saqib.localezy.entity.Customer;
 import com.saqib.localezy.entity.EmailConfirmation;
+import com.saqib.localezy.record.EmailPasswordRecord;
 import com.saqib.localezy.repository.CustomerRepository;
 import com.saqib.localezy.repository.EmailConfirmationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,17 +25,27 @@ public class CustomerServiceImpl implements CustomerService {
     private PasswordEncoder passwordEncoder;
     private JavaMailSender javaMailSender;
     private EmailConfirmationRepository emailConfirmationRepository;
+    private AuthenticationManager authenticationManager;
+    private  JwtService jwtService;
+    private  CustomerDetailsService customerDetailsService;
 
     @Autowired
     public CustomerServiceImpl(
             CustomerRepository customerRepository,
             PasswordEncoder passwordEncoder,
             JavaMailSender javaMailSender,
-            EmailConfirmationRepository emailConfirmationRepository) {
+            EmailConfirmationRepository emailConfirmationRepository,
+            AuthenticationManager authenticationManager,
+            JwtService jwtService,
+            CustomerDetailsService customerDetailsService
+            ) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
         this.javaMailSender = javaMailSender;
         this.emailConfirmationRepository = emailConfirmationRepository;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
+        this.customerDetailsService = customerDetailsService;
     }
 
 
@@ -78,11 +92,6 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public ResponseEntity<?> loginCustomer(Customer customer) {
-        return null;
-    }
-
-    @Override
     public ResponseEntity<?> verifyEmail(String token) {
         EmailConfirmation emailConfirmation = emailConfirmationRepository.findByToken(token);
         if(emailConfirmation!=null){
@@ -99,4 +108,21 @@ public class CustomerServiceImpl implements CustomerService {
     void sendEmail(SimpleMailMessage message) {
         javaMailSender.send(message);
     }
+    @Override
+    public ResponseEntity<?> loginCustomer(EmailPasswordRecord emailPasswordRecord) {
+
+        //check user auhthentication
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(emailPasswordRecord.email(),emailPasswordRecord.password()));
+
+        if(authentication.isAuthenticated()){
+           //generate token
+          String token=  jwtService.generateToken(customerDetailsService
+                    .loadUserByUsername(emailPasswordRecord.email()));
+          return ResponseEntity.ok(token);
+        }
+
+        return ResponseEntity.badRequest().body("Invalid credentials");
+    }
+
 }

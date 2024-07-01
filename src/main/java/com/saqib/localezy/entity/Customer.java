@@ -12,7 +12,7 @@ public class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column(unique = true,nullable = false)
+    @Column(unique = true,nullable = true)
     private String username;
     @Column(unique = true,nullable = false)
     private String password;
@@ -21,8 +21,7 @@ public class Customer {
     private String roles;
     private boolean isVerified;
 
-    public Customer(String username, String password, String email) {
-        this.username = username;
+    public Customer( String password, String email) {
         this.password = password;
         this.email = email;
         this.roles="CUSTOMER";

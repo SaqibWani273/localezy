@@ -25,8 +25,7 @@ public class CustomerController {
     //register endpoint
     @PostMapping("/register")
     public ResponseEntity<?> registerCustomer(@RequestBody Customer customer) {
-        //should atleast contain email, username and password
-        System.out.println("customer -> " + customer.toString());
+        //should atleast contain email & password
         return customerService.registerCustomer(customer);
     }
     //email verification endpoint
@@ -42,6 +41,13 @@ public class CustomerController {
     public ResponseEntity<?> loginCustomer(@RequestBody EmailPasswordRecord emailPasswordRecord) {
         //should atleast contain email and password
         return customerService.loginCustomer(emailPasswordRecord);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> testCustomerAuthentication(@RequestBody String token) {
+      //we donot need to check for user authentication as every request
+        //is being automatically checked using authfilterservice
+        return customerService.getCustomer(token);
     }
 
 }

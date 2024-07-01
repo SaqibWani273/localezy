@@ -1,6 +1,7 @@
 package com.saqib.localezy.security;
 
 import com.saqib.localezy.service.CustomerDetailsService;
+import com.saqib.localezy.service.jwt.JwtAuthFilterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,21 +25,30 @@ public class SecurityConfig {
 
 @Autowired
     private UserDetailsService CustomerDetailsService;
+    @Autowired
+    private JwtAuthFilterService jwtAuthFilterService;
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(configurer
                 ->configurer
-                .anyRequest().permitAll() );
+                .requestMatchers(HttpMethod.POST, "/customer/register").permitAll()
+                .requestMatchers(HttpMethod.GET, "/customer/login").permitAll()
+                .requestMatchers(HttpMethod.GET, "/customer/verify-email").permitAll()
+                .requestMatchers(HttpMethod.GET,"customer/me").hasRole("CUSTOMER")
+                .anyRequest().hasRole("ADMIN") )
+                //add jwt filter before security filter to authenticate users
+                //using jwt token
+                .addFilterBefore(jwtAuthFilterService, UsernamePasswordAuthenticationFilter.class);;
         http.csrf(csrf->csrf.disable());
         //use basic authentication
         http.httpBasic(Customizer.withDefaults());
         return http.build();
+    }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
     //for user authentication
     @Bean

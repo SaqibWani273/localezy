@@ -21,7 +21,7 @@ public interface CustomerService {
 
     //forgot password
 
-    //reset password
+    ResponseEntity<?> getCustomer(String jwtToken);
 
 
 

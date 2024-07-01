@@ -5,6 +5,7 @@ import com.saqib.localezy.entity.EmailConfirmation;
 import com.saqib.localezy.record.EmailPasswordRecord;
 import com.saqib.localezy.repository.CustomerRepository;
 import com.saqib.localezy.repository.EmailConfirmationRepository;
+import com.saqib.localezy.service.jwt.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -26,7 +27,7 @@ public class CustomerServiceImpl implements CustomerService {
     private JavaMailSender javaMailSender;
     private EmailConfirmationRepository emailConfirmationRepository;
     private AuthenticationManager authenticationManager;
-    private  JwtService jwtService;
+    private JwtService jwtService;
     private  CustomerDetailsService customerDetailsService;
 
     @Autowired
@@ -58,10 +59,6 @@ public class CustomerServiceImpl implements CustomerService {
         if (customerRepository.findByEmail(customer.getEmail()) != null) {
 
             return ResponseEntity.badRequest().body("Email already exists");
-        }
-        //check if username exists
-        if (customerRepository.findByUsername(customer.getUsername()) != null) {
-            return ResponseEntity.badRequest().body("Username already exists");
         }
 
         //encrypt password
@@ -104,6 +101,8 @@ public class CustomerServiceImpl implements CustomerService {
 
         return ResponseEntity.badRequest().body("Invalid token");
     }
+
+
     @Async
     void sendEmail(SimpleMailMessage message) {
         javaMailSender.send(message);
@@ -124,5 +123,12 @@ public class CustomerServiceImpl implements CustomerService {
 
         return ResponseEntity.badRequest().body("Invalid credentials");
     }
+    @Override
+    public ResponseEntity<?> getCustomer(String jwtToken) {
+        String email= jwtService.extractEmail(jwtToken);
+        Customer customer= customerRepository.findByEmail(email);
+        return ResponseEntity.ok(customer);
+    }
+
 
 }

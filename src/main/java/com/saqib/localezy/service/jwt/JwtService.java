@@ -1,4 +1,4 @@
-package com.saqib.localezy.service;
+package com.saqib.localezy.service.jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

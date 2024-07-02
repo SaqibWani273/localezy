@@ -33,10 +33,9 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(configurer
                 ->configurer
-                .requestMatchers(HttpMethod.POST, "/customer/register").permitAll()
-                .requestMatchers(HttpMethod.GET, "/customer/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/customer/register","/customer/login").permitAll()
                 .requestMatchers(HttpMethod.GET, "/customer/verify-email").permitAll()
-                .requestMatchers(HttpMethod.GET,"customer/me").hasRole("CUSTOMER")
+                .requestMatchers(HttpMethod.POST,"customer/me").hasRole("CUSTOMER")
                 .anyRequest().hasRole("ADMIN") )
                 //add jwt filter before security filter to authenticate users
                 //using jwt token

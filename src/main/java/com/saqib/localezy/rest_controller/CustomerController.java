@@ -30,20 +30,20 @@ public class CustomerController {
     }
     //email verification endpoint
     @RequestMapping(value="/verify-email", method= {RequestMethod.GET, RequestMethod.POST})
-    //GETMethod to get the token
+    //GETMethod to get the confirmation token
     //POST method to set the isVerified flag to true
     public ResponseEntity<?> verifyEmail(@RequestParam("token")String token) {
         return customerService.verifyEmail(token);
     }
 
     //login endpoint
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> loginCustomer(@RequestBody EmailPasswordRecord emailPasswordRecord) {
         //should atleast contain email and password
         return customerService.loginCustomer(emailPasswordRecord);
     }
 
-    @GetMapping("/me")
+    @PostMapping("/me")
     public ResponseEntity<?> testCustomerAuthentication(@RequestBody String token) {
       //we donot need to check for user authentication as every request
         //is being automatically checked using authfilterservice

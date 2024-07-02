@@ -60,6 +60,10 @@ public class CustomerServiceImpl implements CustomerService {
 
             return ResponseEntity.badRequest().body("Email already exists");
         }
+        if(customerRepository.findByUsername(customer.getUsername())!=null){
+
+            return ResponseEntity.badRequest().body("Username already exists");
+        }
 
         //encrypt password
         customer.setPassword(passwordEncoder.encode(customer.getPassword()));
@@ -109,7 +113,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
     @Override
     public ResponseEntity<?> loginCustomer(EmailPasswordRecord emailPasswordRecord) {
+        if (customerRepository.findByEmail(emailPasswordRecord.email()) == null) {
 
+            return ResponseEntity.badRequest().body("Email Not Registered");
+        }
+        if(!customerRepository.findByEmail(emailPasswordRecord.email()).isVerified()){
+            return ResponseEntity.badRequest().body("Email not verified");
+        }
         //check user auhthentication
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(emailPasswordRecord.email(),emailPasswordRecord.password()));

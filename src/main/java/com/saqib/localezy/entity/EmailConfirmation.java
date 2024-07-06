@@ -19,13 +19,13 @@ public class EmailConfirmation {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private Customer customer;
+    private MyUser myUser;
 
 
-    public EmailConfirmation(String token, Customer customer) {
+    public EmailConfirmation(String token, MyUser myUser) {
         this.token = token;
         this.createDate = Date.from(Instant.now());
-        this.customer = customer;
+        this.myUser = myUser;
     }
 
     public EmailConfirmation() {}
@@ -38,11 +38,12 @@ public class EmailConfirmation {
         this.token = token;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public MyUser getMyUser() {
+
+        return myUser;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setMyUser(MyUser myUser) {
+        this.myUser = myUser;
     }
 }

@@ -3,23 +3,19 @@ package com.saqib.localezy.entity;
 import jakarta.persistence.*;
 
 @Entity
-public class Customer{
+public class Admin{
     @Id
-    @Column(unique = true,nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
+    private long id;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private MyUser myUser;
 
-    public Customer( MyUser myUser) {
-
-
+    public Admin(MyUser myUser) {
         this.myUser = myUser;
     }
 
-    public Customer() {
+    public Admin() {
     }
 
     public long getId() {
@@ -29,8 +25,6 @@ public class Customer{
     public void setId(long id) {
         this.id = id;
     }
-
-
 
     public MyUser getMyUser() {
         return myUser;

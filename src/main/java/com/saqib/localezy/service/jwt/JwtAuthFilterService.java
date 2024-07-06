@@ -1,6 +1,6 @@
 package com.saqib.localezy.service.jwt;
 
-import com.saqib.localezy.service.CustomerDetailsService;
+import com.saqib.localezy.service.MyUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +28,7 @@ public class JwtAuthFilterService extends OncePerRequestFilter {
     JwtService jwtService;
 
     @Autowired
-    CustomerDetailsService customerDetailsService;
+    MyUserDetailsService myUserDetailsService;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 String auhtHeader = request.getHeader("Authorization");
@@ -48,7 +48,7 @@ String email= jwtService.extractEmail(token);
         {
             //do not get confused my name of this method, we've used email
             //in the parameter at the method definition
-            UserDetails userDetails = customerDetailsService.loadUserByUsername(email);
+            UserDetails userDetails = myUserDetailsService.loadUserByUsername(email);
 if(userDetails!=null && jwtService.isTokenValid(token)){
     UsernamePasswordAuthenticationToken authToken= new UsernamePasswordAuthenticationToken(
             email,userDetails.getPassword(),userDetails.getAuthorities());

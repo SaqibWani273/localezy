@@ -1,6 +1,5 @@
 package com.saqib.localezy.security;
 
-import com.saqib.localezy.service.CustomerDetailsService;
 import com.saqib.localezy.service.jwt.JwtAuthFilterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -24,7 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
 @Autowired
-    private UserDetailsService CustomerDetailsService;
+    private UserDetailsService myUserDetailsService;
     @Autowired
     private JwtAuthFilterService jwtAuthFilterService;
 
@@ -33,9 +32,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(configurer
                 ->configurer
-                .requestMatchers(HttpMethod.POST, "/customer/register","/customer/login").permitAll()
-                .requestMatchers(HttpMethod.GET, "/customer/verify-email").permitAll()
+                .requestMatchers(HttpMethod.POST, "/customer/register","/customer/login","admin/register","admin/login").permitAll()
+                .requestMatchers(HttpMethod.GET, "/customer/verify-email","admin/verify-email").permitAll()
                 .requestMatchers(HttpMethod.POST,"customer/me").hasRole("CUSTOMER")
+
+                        .requestMatchers(HttpMethod.POST,"admin/add-category").hasRole("ADMIN")
                 .anyRequest().hasRole("ADMIN") )
                 //add jwt filter before security filter to authenticate users
                 //using jwt token
@@ -59,7 +60,7 @@ public class SecurityConfig {
     }
 
     private UserDetailsService userDetailsService() {
-        return CustomerDetailsService;
+        return myUserDetailsService;
     }
 
     @Bean

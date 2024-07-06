@@ -1,6 +1,6 @@
-package com.saqib.localezy.service;
+package com.saqib.localezy.service.customer;
 
-import com.saqib.localezy.entity.Customer;
+import com.saqib.localezy.entity.MyUser;
 import com.saqib.localezy.record.EmailPasswordRecord;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 public interface CustomerService {
 
     //register
-    ResponseEntity<?> registerCustomer(Customer customer);
+    ResponseEntity<?> registerCustomer(MyUser myUser);
 
     //login
 

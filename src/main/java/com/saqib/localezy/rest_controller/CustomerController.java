@@ -1,9 +1,9 @@
 package com.saqib.localezy.rest_controller;
 
 
-import com.saqib.localezy.entity.Customer;
+import com.saqib.localezy.entity.MyUser;
 import com.saqib.localezy.record.EmailPasswordRecord;
-import com.saqib.localezy.service.CustomerService;
+import com.saqib.localezy.service.customer.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +24,9 @@ public class CustomerController {
 
     //register endpoint
     @PostMapping("/register")
-    public ResponseEntity<?> registerCustomer(@RequestBody Customer customer) {
+    public ResponseEntity<?> registerCustomer(@RequestBody MyUser myUser) {
         //should atleast contain email & password
-        return customerService.registerCustomer(customer);
+        return customerService.registerCustomer(myUser);
     }
     //email verification endpoint
     @RequestMapping(value="/verify-email", method= {RequestMethod.GET, RequestMethod.POST})

@@ -36,4 +36,10 @@ public class AdminController {
     public ResponseEntity<?> addCategory(@RequestBody ProductCategory productCategory) {
         return adminService.addCategory(productCategory);
     }
+    @PostMapping("/me")
+    public ResponseEntity<?> testCustomerAuthentication(@RequestBody String token) {
+        //we donot need to check for user authentication as every request
+        //is being automatically checked using authfilterservice
+        return adminService.verifyToken(token);
+    }
 }

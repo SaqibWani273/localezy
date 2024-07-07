@@ -99,9 +99,8 @@ return authServices.sendEmail(myUser,"Click on http://localhost:8080/customer/ve
         if(!myUserRepository.findByEmail(emailPasswordRecord.email()).isEmailVerified()){
             return ResponseEntity.badRequest().body("Email not verified");
         }
-       authServices.sendTokenBack(emailPasswordRecord);
+     return  authServices.sendTokenBack(emailPasswordRecord);
 
-        return ResponseEntity.badRequest().body("Invalid credentials");
     }
     @Override
     public ResponseEntity<?> getCustomer(String jwtToken) {

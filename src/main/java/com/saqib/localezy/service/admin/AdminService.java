@@ -13,5 +13,5 @@ public interface AdminService {
     ResponseEntity<?> registerAdmin(AdminPasswordRecord adminPasswordRecord);
     ResponseEntity<?> addCategory(ProductCategory productCategory);
     ResponseEntity<?> verifyEmail(String token);
-
+ResponseEntity<?> verifyToken(String token);
 }

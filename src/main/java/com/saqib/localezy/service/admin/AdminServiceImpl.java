@@ -78,6 +78,17 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    public ResponseEntity<?> verifyToken(String token) {
+        String email= jwtService.extractEmail(token);
+        MyUser myUser= myUserRepository.findByEmail(email);
+      if( myUser.getRoles().contains("ADMIN")){
+          return ResponseEntity.ok("Email Verified");
+      }
+
+        return ResponseEntity.badRequest().body("Invalid Token");
+    }
+
+    @Override
     public ResponseEntity<?> login(EmailPasswordRecord emailPasswordRecord) {
 
         MyUser myUser = myUserRepository.findByEmail(emailPasswordRecord.email());

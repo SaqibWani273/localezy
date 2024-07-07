@@ -89,6 +89,7 @@ public class AuthServices {
 
         return ResponseEntity.badRequest().body("Invalid token");
     }
+
     public ResponseEntity<?> sendTokenBack(EmailPasswordRecord emailPasswordRecord) {
         //check user auhthentication
         Authentication authentication = authenticationManager.authenticate(

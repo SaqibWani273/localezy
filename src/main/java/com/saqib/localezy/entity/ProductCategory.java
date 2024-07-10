@@ -1,29 +1,49 @@
 package com.saqib.localezy.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.saqib.localezy.configuration.JpaConverterJSON;
+import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.Type;
+import org.hibernate.type.SqlTypes;
 
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Map;
 
 @Entity
+
 public class ProductCategory {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     long id;
     String name;
     String imageUrl;
+    String description;
     boolean isTopCategory;
-    String[] specificAttributes;
 
-    public ProductCategory(long id, String name, String imageUrl, boolean isTopCategory, String[] specificAttributes) {
+    @Convert(converter = JpaConverterJSON.class)
+    @Column( length = 65000)
+//@JdbcTypeCode(SqlTypes.JSON)
+//@Column(name = "data", columnDefinition = "jsonb")
+    Map<String,Object> catSpecificMustAttributes;
+@Convert(converter = JpaConverterJSON.class)
+        @Column(length = 65000)
+//@JdbcTypeCode(SqlTypes.JSON)
+//@Column(name = "data", columnDefinition = "jsonb")
+    Map<String,Object> catSpecificOptionalAttributes;
+
+
+
+    public ProductCategory(long id, String name, String imageUrl, String description, boolean isTopCategory,  Map<String, Object> catSpecificMustAttributes, Map<String, Object> catSpecificOptionalAttributes) {
         this.id = id;
         this.name = name;
         this.imageUrl = imageUrl;
+        this.description = description;
         this.isTopCategory = isTopCategory;
-        this.specificAttributes = specificAttributes;
+        this.catSpecificMustAttributes = catSpecificMustAttributes;
+        this.catSpecificOptionalAttributes = catSpecificOptionalAttributes;
+
     }
 
     public ProductCategory() {
@@ -53,20 +73,36 @@ public class ProductCategory {
         this.imageUrl = imageUrl;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public boolean isTopCategory() {
         return isTopCategory;
     }
 
-    public void setTopCategory(boolean topCategory) {
+    public void setIsTopCategory(boolean topCategory) {
         isTopCategory = topCategory;
     }
 
-    public String[] getSpecificAttributes() {
-        return specificAttributes;
+    public Map<String, Object> getCatSpecificMustAttributes() {
+        return catSpecificMustAttributes;
     }
 
-    public void setSpecificAttributes(String[] specificAttributes) {
-        this.specificAttributes = specificAttributes;
+    public void setCatSpecificMustAttributes(Map<String, Object> catSpecificMustAttributes) {
+        this.catSpecificMustAttributes = catSpecificMustAttributes;
+    }
+
+    public Map<String, Object> getCatSpecificOptionalAttributes() {
+        return catSpecificOptionalAttributes;
+    }
+
+    public void setCatSpecificOptionalAttributes(Map<String, Object> catSpecificOptionalAttributes) {
+        this.catSpecificOptionalAttributes = catSpecificOptionalAttributes;
     }
 
     @Override
@@ -75,8 +111,10 @@ public class ProductCategory {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
+                ", description='" + description + '\'' +
                 ", isTopCategory=" + isTopCategory +
-                ", specificAttributes=" + Arrays.toString(specificAttributes) +
+                ", catSpecificMustAttributes=" + catSpecificMustAttributes +
+                ", catSpecificOptionalAttributes=" + catSpecificOptionalAttributes +
                 '}';
     }
 }

@@ -32,17 +32,23 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(configurer
                 ->configurer
-                .requestMatchers(HttpMethod.POST, "/customer/register","/customer/login","admin/register","admin/login","shop/register","shop/login").permitAll()
-                .requestMatchers(HttpMethod.GET, "/customer/verify-email","admin/verify-email","shop/verify-email").permitAll()
+                .requestMatchers(HttpMethod.POST, "/customer/register","/customer/login",
+                        "admin/register","admin/login","shop/register",
+                        "shop/login", "admin/test-post").permitAll()
+                .requestMatchers(HttpMethod.GET, "/customer/verify-email",
+                        "admin/verify-email","shop/verify-email","admin/test-get").permitAll()
                 .requestMatchers(HttpMethod.POST,"customer/me").hasRole("CUSTOMER")
                         .requestMatchers(HttpMethod.POST,"shop/me").hasRole("SHOP")
                         .requestMatchers(HttpMethod.GET,"shop/add-product").hasRole("SHOP")
                         .requestMatchers(HttpMethod.POST,"admin/add-category").hasRole("ADMIN")
-                .anyRequest().hasRole("ADMIN") )
+                .anyRequest().hasRole("ADMIN")
+                )
                 //add jwt filter before security filter to authenticate users
                 //using jwt token
                 .addFilterBefore(jwtAuthFilterService, UsernamePasswordAuthenticationFilter.class);;
         http.csrf(csrf->csrf.disable());
+//        http.cors();
+//        http.cors(cors->cors.disable());
         //use basic authentication
         http.httpBasic(Customizer.withDefaults());
         return http.build();

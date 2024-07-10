@@ -25,7 +25,7 @@ public class JwtService {
     @Value("${security.jwt.secret-key}")
     private  String secretKey;
 //  private  final  String secretKey = env.getProperty("security.jwt.secret-key");
-    private static final long expInMilis= TimeUnit.MINUTES.toMillis(30);
+    private static final long expInMilis= TimeUnit.HOURS.toMillis(48);
 
     //method used to generate token at login
     public String generateToken(UserDetails user){

@@ -1,6 +1,7 @@
 package com.saqib.localezy.rest_controller;
 
 import com.saqib.localezy.entity.MyUser;
+import com.saqib.localezy.entity.ProductCategory;
 import com.saqib.localezy.entity.Shop;
 import com.saqib.localezy.record.EmailPasswordRecord;
 import com.saqib.localezy.service.customer.CustomerService;

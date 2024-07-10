@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/admin")
+@CrossOrigin(origins = "http://localhost:8080")
 public class AdminController {
     @Autowired
     AdminService adminService;
@@ -27,6 +28,9 @@ public class AdminController {
     public ResponseEntity<?> verifyEmail(@RequestParam("token")String token) {
         return adminService.verifyEmail(token);
     }
+
+    //allow all
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody EmailPasswordRecord emailPasswordRecord) {
         //should atleast contain email and password
@@ -34,6 +38,7 @@ public class AdminController {
     }
     @PostMapping("/add-category")
     public ResponseEntity<?> addCategory(@RequestBody ProductCategory productCategory) {
+
         return adminService.addCategory(productCategory);
     }
     @PostMapping("/me")
@@ -41,5 +46,13 @@ public class AdminController {
         //we donot need to check for user authentication as every request
         //is being automatically checked using authfilterservice
         return adminService.verifyToken(token);
+    }
+    @GetMapping("test-get")
+    public ResponseEntity<?> testGet() {
+        return ResponseEntity.ok("test get successful");
+    }
+    @PostMapping("test-post")
+    public ResponseEntity<?> testPost() {
+        return ResponseEntity.ok("test post successful");
     }
 }

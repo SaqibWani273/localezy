@@ -1,11 +1,12 @@
 package com.saqib.localezy.entity;
 
 import jakarta.persistence.*;
+import lombok.ToString;
 
 import java.time.Instant;
 import java.util.Date;
 
-@Entity
+@Entity @ToString
 public class Shop {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -15,7 +16,7 @@ public class Shop {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private MyUser myUser;
-    @Column(unique = true,nullable = false)
+    @Column(nullable = false)
     boolean isVerifiedByAdmin;
     String imageUrl;
     @Column(unique = true,nullable = false)

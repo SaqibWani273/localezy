@@ -38,9 +38,10 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/customer/verify-email",
                         "admin/verify-email","shop/verify-email","admin/test-get").permitAll()
                 .requestMatchers(HttpMethod.POST,"customer/me").hasRole("CUSTOMER")
-                        .requestMatchers(HttpMethod.POST,"shop/me").hasRole("SHOP")
-                        .requestMatchers(HttpMethod.GET,"shop/add-product").hasRole("SHOP")
+                        .requestMatchers(HttpMethod.POST,"shop/me","shop/add-product").hasRole("SHOP")
                         .requestMatchers(HttpMethod.POST,"admin/add-category").hasRole("ADMIN")
+                                .requestMatchers(HttpMethod.POST,"user/me").hasAnyRole("CUSTOMER","SHOP")
+                                .requestMatchers(HttpMethod.GET,"user/get-all-categories").hasAnyRole("CUSTOMER","SHOP")
                 .anyRequest().hasRole("ADMIN")
                 )
                 //add jwt filter before security filter to authenticate users

@@ -6,6 +6,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -31,9 +32,12 @@ public class JwtService {
     public String generateToken(UserDetails user){
 
 // additional data can be added  to the token through claims
-
+        System.out.println("user authorities-> "+user.getAuthorities());
         Map<String,String> claims=new HashMap<>();
         claims.put("name",user.getUsername());
+
+        claims.put("role",user.getAuthorities().stream().map(GrantedAuthority::getAuthority).findFirst().get());
+//        claims.put("role",)
         return Jwts.builder()
                 .claims(claims)
                 .subject(user.getUsername())
@@ -47,7 +51,7 @@ public class JwtService {
         return Keys.hmacShaKeyFor(byteKey);
     }
     //methods used for verfication after login
-    private Claims extractClaims(String token){
+    public Claims extractClaims(String token){
 
         return Jwts
                 .parser()

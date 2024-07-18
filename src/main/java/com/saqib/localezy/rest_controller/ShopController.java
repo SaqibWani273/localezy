@@ -1,6 +1,7 @@
 package com.saqib.localezy.rest_controller;
 
 import com.saqib.localezy.entity.MyUser;
+import com.saqib.localezy.entity.Product;
 import com.saqib.localezy.entity.ProductCategory;
 import com.saqib.localezy.entity.Shop;
 import com.saqib.localezy.record.EmailPasswordRecord;
@@ -43,6 +44,10 @@ public class ShopController {
       //we donot need to check for user authentication as every request
         //is being automatically checked using authfilterservice
         return shopService.getShop(token);
+    }
+    @PostMapping("add-product")
+    public ResponseEntity<?> addProduct(@RequestBody Product product) {
+        return shopService.addProduct(product);
     }
 
 }

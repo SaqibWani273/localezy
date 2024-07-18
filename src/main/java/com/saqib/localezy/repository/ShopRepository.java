@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface  ShopRepository extends JpaRepository<Shop, Long> {
     Shop findByMyUser(MyUser myUser);
+//    Shop findByUserId(Long id);
 }

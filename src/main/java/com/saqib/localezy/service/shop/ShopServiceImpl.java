@@ -6,9 +6,11 @@ import com.saqib.localezy.entity.Product;
 import com.saqib.localezy.entity.Shop;
 import com.saqib.localezy.record.EmailPasswordRecord;
 import com.saqib.localezy.repository.MyUserRepository;
+import com.saqib.localezy.repository.ProductRepository;
 import com.saqib.localezy.repository.ShopRepository;
 import com.saqib.localezy.service.AuthServices;
 import com.saqib.localezy.service.jwt.JwtService;
+import org.antlr.v4.runtime.misc.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,8 @@ public class ShopServiceImpl implements ShopService {
     private ShopRepository shopRepository;
     @Autowired
     private JwtService jwtService;
+    @Autowired
+    private ProductRepository productRepository;
 
     @Override
     public ResponseEntity<?> registerShop(Shop shop) {
@@ -52,13 +56,18 @@ public class ShopServiceImpl implements ShopService {
     }
     @Override
     public ResponseEntity<?> loginShop(EmailPasswordRecord emailPasswordRecord) {
-        if (myUserRepository.findByEmail(emailPasswordRecord.email()) == null) {
+        final MyUser myUser= myUserRepository.findByEmail(emailPasswordRecord.email());
+        if (myUser == null) {
 
             return ResponseEntity.badRequest().body("Email Not Registered");
         }
-        if(!myUserRepository.findByEmail(emailPasswordRecord.email()).isEmailVerified()){
+        if(!myUser.isEmailVerified()){
             return ResponseEntity.badRequest().body("Email not verified");
         }
+        if(!myUser.getRoles().equals("SHOP")){
+            return ResponseEntity.badRequest().body("Not a shop user");
+        }
+        //to do : check isVerifiefd by admin later
         return authServices.sendTokenBack(emailPasswordRecord);
     }
 
@@ -73,6 +82,10 @@ public class ShopServiceImpl implements ShopService {
 
     @Override
     public ResponseEntity<?> addProduct(Product product) {
-      return   ResponseEntity.ok("Welcome to add product");
+        System.out.println("bool-> "+product.getClass().equals(Product.class));
+        System.out.println( "adding product "+product.toString());
+//        Shop shop=shopRepository.findById(product.getShop().getId()).get();
+      productRepository.save(product);
+        return   ResponseEntity.ok("Product Added -> "+product.toString());
     }
 }

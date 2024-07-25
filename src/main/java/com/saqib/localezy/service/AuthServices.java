@@ -64,6 +64,7 @@ public class AuthServices {
         emailConfirmationRepository.save(emailConfirmation);
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo(myUser.getEmail());
+//        simpleMailMessage.getFrom(adminEmail);
         simpleMailMessage.setSubject("Email Verification for Localezy");
 
         simpleMailMessage.setText(text + emailConfirmation.getToken());

@@ -36,6 +36,7 @@ public class ShopServiceImpl implements ShopService {
             //=> error
             return ResponseEntity.badRequest().body(result);
         }
+
        shop.getMyUser().setRoles("SHOP");
         //save myUser with isVerified as false(by default)
         myUserRepository.save(shop.getMyUser());

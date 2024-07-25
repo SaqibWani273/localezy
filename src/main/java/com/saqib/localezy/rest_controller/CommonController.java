@@ -30,7 +30,10 @@ public class CommonController {
     private ShopRepository shopRepository;
     @Autowired
     private CommonService commonService;
-
+@GetMapping("/test")
+    public String test() {
+        return "tested successfully";
+    }
     @PostMapping("/me")
     public ResponseEntity<?> testCustomerAuthentication(@RequestBody String token) {
         //we donot need to check for user authentication as every request

@@ -17,6 +17,7 @@ public class ProductCategory {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     long id;
+    @Column(unique = true,nullable = false)
     String name;
     String imageUrl;
     String description;

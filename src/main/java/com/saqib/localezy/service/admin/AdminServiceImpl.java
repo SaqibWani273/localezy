@@ -55,7 +55,7 @@ public class AdminServiceImpl implements AdminService {
     public ResponseEntity<?> registerAdmin(AdminPasswordRecord adminPasswordRecord) {
         var result = authServices.preRegistrationProcess(adminPasswordRecord.myUser());
         if(result instanceof String) {
-            return ResponseEntity.ok(result);
+            return ResponseEntity.badRequest().body(result);
         }
         if(adminPasswordRecord.secretCode().equals(adminPassword)) {
             MyUser myUser = adminPasswordRecord.myUser();
@@ -65,10 +65,10 @@ public class AdminServiceImpl implements AdminService {
             admin.setMyUser(adminPasswordRecord.myUser());
             adminRepository.save(admin);
             //send email verification
-            return authServices.sendEmail(myUser, "Click on http://localhost:8080/admin/verifyEmail?token=");
+            return authServices.sendEmail(myUser, "Click on http://localhost:8080/admin/verify-email?token=");
         }
 
-        return ResponseEntity.ok("Bad Admin credentials");
+        return ResponseEntity.badRequest().body("Invalid Secret Code");
     }
 
 

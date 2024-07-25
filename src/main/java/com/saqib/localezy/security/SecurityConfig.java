@@ -34,14 +34,15 @@ public class SecurityConfig {
                 ->configurer
                 .requestMatchers(HttpMethod.POST, "/customer/register","/customer/login",
                         "admin/register","admin/login","shop/register",
-                        "shop/login", "admin/test-post").permitAll()
+                        "shop/login", "admin/test-post","admin/verify-email").permitAll()
                 .requestMatchers(HttpMethod.GET, "/customer/verify-email",
-                        "admin/verify-email","shop/verify-email","admin/test-get").permitAll()
+                        "/admin/verify-email","/shop/verify-email","admin/test-get",
+                        "user/test","user/get-all-categories").permitAll()
                 .requestMatchers(HttpMethod.POST,"customer/me").hasRole("CUSTOMER")
                         .requestMatchers(HttpMethod.POST,"shop/me","shop/add-product").hasRole("SHOP")
                         .requestMatchers(HttpMethod.POST,"admin/add-category").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.POST,"user/me").hasAnyRole("CUSTOMER","SHOP")
-                                .requestMatchers(HttpMethod.GET,"user/get-all-categories").hasAnyRole("CUSTOMER","SHOP")
+//                                .requestMatchers(HttpMethod.GET,"user/get-all-categories").hasAnyRole("CUSTOMER","SHOP")
                 .anyRequest().hasRole("ADMIN")
                 )
                 //add jwt filter before security filter to authenticate users

@@ -1,12 +1,15 @@
 package com.saqib.localezy.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.List;
 
-@Entity @ToString
+@Entity @ToString @Getter @Setter
 public class Shop {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,25 +21,49 @@ public class Shop {
     private MyUser myUser;
     @Column(nullable = false)
     boolean isVerifiedByAdmin;
-    String imageUrl;
+//    String imageUrl;
+String shopPicUrl;
     @Column(unique = true,nullable = false)
-    int mobileNumber;
+    int phoneNumber;
     String address;
     String description;
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
+    String ownerName;
+    String ownerPicUrl;
+    String pancardPicUrl;
+    String ownerIdPicUrl;
+    String businessLicense;
+    List<String> categories;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="location_id",referencedColumnName = "id")
+    LocationInfo locationInfo;
 
     public Shop() {
     }
 
-    public Shop(String description, String address, int mobileNumber, String imageUrl, MyUser myUser) {
-        this.description = description;
-        this.address = address;
-        this.mobileNumber = mobileNumber;
-        this.imageUrl = imageUrl;
+    public Shop(long id, MyUser myUser, boolean isVerifiedByAdmin,
+                String shopPicUrl, int phoneNumber, String address,
+                String description,  String ownerName, String ownerPicUrl,
+                String pancardPicUrl, String ownerIdPicUrl,
+                String businessLicense, List<String> categories,
+                LocationInfo locationInfo
+                ) {
+        this.id = id;
         this.myUser = myUser;
-        this.isVerifiedByAdmin = false;
+        this.isVerifiedByAdmin = isVerifiedByAdmin;
+        this.shopPicUrl = shopPicUrl;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.description = description;
         this.createDate = Date.from(Instant.now());
+        this.ownerName = ownerName;
+        this.ownerPicUrl = ownerPicUrl;
+        this.pancardPicUrl = pancardPicUrl;
+        this.ownerIdPicUrl = ownerIdPicUrl;
+        this.businessLicense = businessLicense;
+        this.categories = categories;
+        this.locationInfo = locationInfo;
     }
 
     public long getId() {
@@ -63,20 +90,20 @@ public class Shop {
         isVerifiedByAdmin = verifiedByAdmin;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getShopPicUrl() {
+        return shopPicUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setShopPicUrl(String shopPicUrl) {
+        this.shopPicUrl = shopPicUrl;
     }
 
-    public int getMobileNumber() {
-        return mobileNumber;
+    public int getPhoneNumber() {
+        return phoneNumber;
     }
 
-    public void setMobileNumber(int mobileNumber) {
-        this.mobileNumber = mobileNumber;
+    public void setPhoneNumber(int phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public String getAddress() {
@@ -101,5 +128,61 @@ public class Shop {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public String getOwnerName() {
+        return ownerName;
+    }
+
+    public void setOwnerName(String ownerName) {
+        this.ownerName = ownerName;
+    }
+
+    public String getOwnerPicUrl() {
+        return ownerPicUrl;
+    }
+
+    public void setOwnerPicUrl(String ownerPicUrl) {
+        this.ownerPicUrl = ownerPicUrl;
+    }
+
+    public String getPancardPicUrl() {
+        return pancardPicUrl;
+    }
+
+    public void setPancardPicUrl(String pancardPicUrl) {
+        this.pancardPicUrl = pancardPicUrl;
+    }
+
+    public String getOwnerIdPicUrl() {
+        return ownerIdPicUrl;
+    }
+
+    public void setOwnerIdPicUrl(String ownerIdPicUrl) {
+        this.ownerIdPicUrl = ownerIdPicUrl;
+    }
+
+    public String getBusinessLicense() {
+        return businessLicense;
+    }
+
+    public void setBusinessLicense(String businessLicense) {
+        this.businessLicense = businessLicense;
+    }
+
+    public List<String> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<String> categories) {
+        this.categories = categories;
+    }
+
+    public LocationInfo getLocationInfo() {
+        return locationInfo;
+    }
+
+    public void setLocationInfo(LocationInfo locationInfo) {
+        this.locationInfo = locationInfo;
     }
 }

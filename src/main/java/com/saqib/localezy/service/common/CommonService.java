@@ -8,4 +8,5 @@ public interface  CommonService {
 
     public ResponseEntity<?> getAllCategories();
 
+
 }

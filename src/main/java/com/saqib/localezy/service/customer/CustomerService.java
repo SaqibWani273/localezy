@@ -23,6 +23,8 @@ public interface CustomerService {
 
     ResponseEntity<?> getCustomer(String jwtToken);
 
+    ResponseEntity<?> getAllProducts();
+
 
 
 }

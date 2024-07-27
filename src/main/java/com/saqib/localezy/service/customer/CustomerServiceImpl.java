@@ -7,10 +7,13 @@ import com.saqib.localezy.record.EmailPasswordRecord;
 import com.saqib.localezy.repository.CustomerRepository;
 import com.saqib.localezy.repository.EmailConfirmationRepository;
 import com.saqib.localezy.repository.MyUserRepository;
+import com.saqib.localezy.repository.ProductRepository;
 import com.saqib.localezy.service.AuthServices;
 import com.saqib.localezy.service.MyUserDetailsService;
 import com.saqib.localezy.service.jwt.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -34,6 +37,9 @@ public class CustomerServiceImpl implements CustomerService {
     private JwtService jwtService;
     private MyUserDetailsService myUserDetailsService;
     private AuthServices authServices;
+    private ProductRepository productRepository;
+
+
 
     @Autowired
     public CustomerServiceImpl(
@@ -45,7 +51,8 @@ public class CustomerServiceImpl implements CustomerService {
             JwtService jwtService,
             MyUserDetailsService myUserDetailsService,
             MyUserRepository myUserRepository,
-            AuthServices authServices
+            AuthServices authServices,
+            ProductRepository productRepository
             ) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
@@ -56,6 +63,7 @@ public class CustomerServiceImpl implements CustomerService {
         this.myUserDetailsService = myUserDetailsService;
         this.myUserRepository = myUserRepository;
         this.authServices = authServices;
+        this.productRepository = productRepository;
     }
 
 
@@ -79,7 +87,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         //send email verification
 
-return authServices.sendEmail(myUser,"Click on http://localhost:8080/customer/verify-email?token=");
+return authServices.sendEmail(myUser,"customer/verify-email?token=");
 
     }
 
@@ -106,7 +114,20 @@ return authServices.sendEmail(myUser,"Click on http://localhost:8080/customer/ve
     public ResponseEntity<?> getCustomer(String jwtToken) {
         String email= jwtService.extractEmail(jwtToken);
         MyUser myUser= myUserRepository.findByEmail(email);
-        return ResponseEntity.ok(myUser);
+        if(myUser==null){
+            return ResponseEntity.badRequest().body("Invalid token");
+        }
+        var customer = customerRepository.findByMyUser(myUser);
+        if(customer==null){
+            return ResponseEntity.badRequest().body("Invalid token");
+        }
+     return ResponseEntity.ok( customer)  ;
+
+    }
+
+    @Override
+    public ResponseEntity<?> getAllProducts() {
+        return ResponseEntity.ok(productRepository.findAll());
     }
 
 

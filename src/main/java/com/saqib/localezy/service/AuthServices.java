@@ -7,6 +7,7 @@ import com.saqib.localezy.repository.EmailConfirmationRepository;
 import com.saqib.localezy.repository.MyUserRepository;
 import com.saqib.localezy.service.jwt.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -35,6 +36,8 @@ public class AuthServices {
     private JwtService jwtService;
     @Autowired
     private AuthenticationManager authenticationManager;
+    @Value("${spring.host.current}")
+    private String host;
 
 
     //returns string if error else returns MyUser
@@ -67,7 +70,7 @@ public class AuthServices {
 //        simpleMailMessage.getFrom(adminEmail);
         simpleMailMessage.setSubject("Email Verification for Localezy");
 
-        simpleMailMessage.setText(text + emailConfirmation.getToken());
+        simpleMailMessage.setText("Email verification link: " + host  + text + emailConfirmation.getToken());
 
         sendEmail(simpleMailMessage);
         return ResponseEntity.ok("Email verification link sent to " + myUser.getEmail());

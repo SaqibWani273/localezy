@@ -50,4 +50,8 @@ public class CustomerController {
         return customerService.getCustomer(token);
     }
 
+    @GetMapping("/get-all-products")
+    public ResponseEntity<?> getProducts() {
+        return customerService.getAllProducts();
+    }
 }

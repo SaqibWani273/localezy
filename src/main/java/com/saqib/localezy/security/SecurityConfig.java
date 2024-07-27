@@ -37,7 +37,7 @@ public class SecurityConfig {
                         "shop/login", "admin/test-post","admin/verify-email").permitAll()
                 .requestMatchers(HttpMethod.GET, "/customer/verify-email",
                         "/admin/verify-email","/shop/verify-email","admin/test-get",
-                        "user/test","user/get-all-categories").permitAll()
+                        "user/test","user/get-all-categories","/customer/get-all-products").permitAll()
                 .requestMatchers(HttpMethod.POST,"customer/me").hasRole("CUSTOMER")
                         .requestMatchers(HttpMethod.POST,"shop/me","shop/add-product").hasRole("SHOP")
                         .requestMatchers(HttpMethod.POST,"admin/add-category").hasRole("ADMIN")

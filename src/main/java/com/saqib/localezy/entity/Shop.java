@@ -24,7 +24,7 @@ public class Shop {
 //    String imageUrl;
 String shopPicUrl;
     @Column(unique = true,nullable = false)
-    int phoneNumber;
+    String phoneNumber;
     String address;
     String description;
     @Temporal(TemporalType.TIMESTAMP)
@@ -43,7 +43,7 @@ String shopPicUrl;
     }
 
     public Shop(long id, MyUser myUser, boolean isVerifiedByAdmin,
-                String shopPicUrl, int phoneNumber, String address,
+                String shopPicUrl, String phoneNumber, String address,
                 String description,  String ownerName, String ownerPicUrl,
                 String pancardPicUrl, String ownerIdPicUrl,
                 String businessLicense, List<String> categories,
@@ -98,11 +98,11 @@ String shopPicUrl;
         this.shopPicUrl = shopPicUrl;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
     }
 

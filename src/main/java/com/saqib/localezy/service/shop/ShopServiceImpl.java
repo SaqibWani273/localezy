@@ -46,7 +46,7 @@ public class ShopServiceImpl implements ShopService {
 
         //send email verification
 
-        return authServices.sendEmail(shop.getMyUser(),"Click on http://localhost:8080/shop/verify-email?token=");
+        return authServices.sendEmail(shop.getMyUser(),"shop/verify-email?token=");
 
 
     }

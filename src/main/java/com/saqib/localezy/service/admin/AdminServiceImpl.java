@@ -22,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -80,8 +81,11 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public ResponseEntity<?> verifyToken(String token) {
         String email= jwtService.extractEmail(token);
-        MyUser myUser= myUserRepository.findByEmail(email);
-      if( myUser.getRoles().contains("ADMIN")){
+        Optional<MyUser> myUser= myUserRepository.findByEmail(email);
+        if(myUser.isEmpty()){
+            return ResponseEntity.badRequest().body("No User Found");
+        }
+      if( myUser.get().getRoles().contains("ADMIN")){
           return ResponseEntity.ok("Email Verified");
       }
 
@@ -91,8 +95,8 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public ResponseEntity<?> login(EmailPasswordRecord emailPasswordRecord) {
 
-        MyUser myUser = myUserRepository.findByEmail(emailPasswordRecord.email());
-        if (myUser!=null && myUser.getRoles().contains("ADMIN")) {
+        Optional<MyUser> myUser = myUserRepository.findByEmail(emailPasswordRecord.email());
+        if (myUser.isPresent() && myUser.get().getRoles().contains("ADMIN")) {
             return authServices.sendTokenBack(emailPasswordRecord);
         }
 

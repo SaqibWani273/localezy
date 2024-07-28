@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 public interface  CommonService {
 
     public ResponseEntity<?> getAllCategories();
-
+public ResponseEntity<?> emailExists(String email);
+public ResponseEntity<?> usernameExists(String username);
+//public ResponseEntity<?> phoneExists(String phone);
 
 }

@@ -1,5 +1,6 @@
 package com.saqib.localezy.rest_controller;
 
+import com.saqib.localezy.entity.Customer;
 import com.saqib.localezy.entity.MyUser;
 import com.saqib.localezy.repository.CustomerRepository;
 import com.saqib.localezy.repository.MyUserRepository;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -30,7 +32,9 @@ public class CommonController {
     private ShopRepository shopRepository;
     @Autowired
     private CommonService commonService;
-@GetMapping("/test")
+
+
+    @GetMapping("/test")
     public String test() {
         return "tested successfully";
     }
@@ -39,19 +43,20 @@ public class CommonController {
         //we donot need to check for user authentication as every request
         //is being automatically checked using authfilterservice
         String email = jwtService.extractEmail(token);
-        final MyUser myUser = myUserRepository.findByEmail(email);
+        final Optional<MyUser> myUser = myUserRepository.findByEmail(email);
         Claims claims = jwtService.extractClaims(token);
         String role = claims.get("role").toString();
-        Object model;
+        Map<String, Object> responseBody = new HashMap<>();
         if (role.equals("ROLE_CUSTOMER")) {
-            model = customerRepository.findByMyUser(myUser);
+            responseBody.put( "model", customerRepository.findByMyUser(myUser.get()));
         } else {
             //=> ROLE_SHOP
-            model = shopRepository.findByMyUser(myUser);
+            responseBody.put( "model", shopRepository.findByMyUser(myUser.get()));
+
         }
-        Map<String, Object> responseBody = new HashMap<>();
         responseBody.put("role", role);
-        responseBody.put("model", model);
+
+        //shop model
         return ResponseEntity.ok(responseBody);
 
     }
@@ -60,4 +65,17 @@ public class CommonController {
     public ResponseEntity<?> getAllCategories() {
         return commonService.getAllCategories();
     }
+    @PostMapping("/email-exists")
+    public ResponseEntity<?> emailExists(@RequestBody String email) {
+        return commonService.emailExists(email);
+    }
+//    @PostMapping("/phone-exists")
+//    public ResponseEntity<?> phoneExists(@RequestBody String phone) {
+//        return commonService.phoneExists(phone);
+//    }
+    @PostMapping("/username-exists")
+    public ResponseEntity<?> usernameExists(@RequestBody String username) {
+        return commonService.usernameExists(username);
+    }
+
 }

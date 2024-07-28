@@ -35,6 +35,7 @@ String shopPicUrl;
     String ownerIdPicUrl;
     String businessLicense;
     List<String> categories;
+    //many shops can be in one location
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="location_id",referencedColumnName = "id")
     LocationInfo locationInfo;

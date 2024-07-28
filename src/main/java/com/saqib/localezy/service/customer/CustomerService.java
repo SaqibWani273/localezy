@@ -1,7 +1,9 @@
 package com.saqib.localezy.service.customer;
 
+import com.saqib.localezy.entity.Customer;
 import com.saqib.localezy.entity.MyUser;
 import com.saqib.localezy.record.EmailPasswordRecord;
+import com.saqib.localezy.record.UpdateCartItemsRecord;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +23,14 @@ public interface CustomerService {
 
     //forgot password
 
-    ResponseEntity<?> getCustomer(String jwtToken);
+    Customer getCustomer(String jwtToken);
 
     ResponseEntity<?> getAllProducts();
+    //to do : also receive jwt token to check if user is authorized
 
+    ResponseEntity<?> updateCustomer(Customer customer);
+
+    ResponseEntity<?> updateCartItems(UpdateCartItemsRecord updateCartItemsRecord);
 
 
 }

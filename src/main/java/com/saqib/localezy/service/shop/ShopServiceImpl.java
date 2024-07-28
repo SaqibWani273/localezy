@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class ShopServiceImpl implements ShopService {
     @Autowired
@@ -57,15 +59,15 @@ public class ShopServiceImpl implements ShopService {
     }
     @Override
     public ResponseEntity<?> loginShop(EmailPasswordRecord emailPasswordRecord) {
-        final MyUser myUser= myUserRepository.findByEmail(emailPasswordRecord.email());
-        if (myUser == null) {
+        final Optional<MyUser> myUser= myUserRepository.findByEmail(emailPasswordRecord.email());
+        if (myUser.isEmpty()) {
 
             return ResponseEntity.badRequest().body("Email Not Registered");
         }
-        if(!myUser.isEmailVerified()){
+        if(!myUser.get().isEmailVerified()){
             return ResponseEntity.badRequest().body("Email not verified");
         }
-        if(!myUser.getRoles().equals("SHOP")){
+        if(!myUser.get().getRoles().equals("SHOP")){
             return ResponseEntity.badRequest().body("Not a shop user");
         }
         //to do : check isVerifiefd by admin later
@@ -75,8 +77,8 @@ public class ShopServiceImpl implements ShopService {
     @Override
     public ResponseEntity<?> getShop(String token) {
         String email= jwtService.extractEmail(token);
-        MyUser myUser= myUserRepository.findByEmail(email);
-        Shop shop=shopRepository.findByMyUser(myUser);
+        Optional<MyUser> myUser= myUserRepository.findByEmail(email);
+        Shop shop=shopRepository.findByMyUser(myUser.get());
         return ResponseEntity.ok(shop);
     }
 

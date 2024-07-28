@@ -1,30 +1,19 @@
 package com.saqib.localezy.service.customer;
 
-import com.saqib.localezy.entity.Customer;
-import com.saqib.localezy.entity.EmailConfirmation;
-import com.saqib.localezy.entity.MyUser;
+import com.saqib.localezy.entity.*;
 import com.saqib.localezy.record.EmailPasswordRecord;
-import com.saqib.localezy.repository.CustomerRepository;
-import com.saqib.localezy.repository.EmailConfirmationRepository;
-import com.saqib.localezy.repository.MyUserRepository;
-import com.saqib.localezy.repository.ProductRepository;
+import com.saqib.localezy.record.UpdateCartItemsRecord;
+import com.saqib.localezy.repository.*;
 import com.saqib.localezy.service.AuthServices;
 import com.saqib.localezy.service.MyUserDetailsService;
 import com.saqib.localezy.service.jwt.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
+import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -40,7 +29,6 @@ public class CustomerServiceImpl implements CustomerService {
     private ProductRepository productRepository;
 
 
-
     @Autowired
     public CustomerServiceImpl(
             CustomerRepository customerRepository,
@@ -53,6 +41,7 @@ public class CustomerServiceImpl implements CustomerService {
             MyUserRepository myUserRepository,
             AuthServices authServices,
             ProductRepository productRepository
+
             ) {
         this.customerRepository = customerRepository;
         this.passwordEncoder = passwordEncoder;
@@ -85,6 +74,7 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.save(customer);
 
 
+
         //send email verification
 
 return authServices.sendEmail(myUser,"customer/verify-email?token=");
@@ -100,34 +90,45 @@ return authServices.sendEmail(myUser,"customer/verify-email?token=");
 
     @Override
     public ResponseEntity<?> loginCustomer(EmailPasswordRecord emailPasswordRecord) {
-        if (myUserRepository.findByEmail(emailPasswordRecord.email()) == null) {
+        if (myUserRepository.findByEmail(emailPasswordRecord.email()).isEmpty()) {
 
             return ResponseEntity.badRequest().body("Email Not Registered");
         }
-        if(!myUserRepository.findByEmail(emailPasswordRecord.email()).isEmailVerified()){
+        if(!myUserRepository.findByEmail(emailPasswordRecord.email()).get().isEmailVerified()){
             return ResponseEntity.badRequest().body("Email not verified");
         }
      return  authServices.sendTokenBack(emailPasswordRecord);
 
     }
     @Override
-    public ResponseEntity<?> getCustomer(String jwtToken) {
+    public Customer getCustomer(String jwtToken) {
         String email= jwtService.extractEmail(jwtToken);
-        MyUser myUser= myUserRepository.findByEmail(email);
-        if(myUser==null){
-            return ResponseEntity.badRequest().body("Invalid token");
+        Optional<MyUser> myUser= myUserRepository.findByEmail(email);
+        if(myUser.isEmpty()){
+            return null;
         }
-        var customer = customerRepository.findByMyUser(myUser);
-        if(customer==null){
-            return ResponseEntity.badRequest().body("Invalid token");
-        }
-     return ResponseEntity.ok( customer)  ;
+             Customer customer=   customerRepository.findByMyUser(myUser.get());
+        return customer;
 
     }
 
     @Override
     public ResponseEntity<?> getAllProducts() {
         return ResponseEntity.ok(productRepository.findAll());
+    }
+
+    @Override
+    public ResponseEntity<?> updateCustomer(Customer customer) {
+        return ResponseEntity.ok(customerRepository.save(customer));
+    }
+
+    @Override
+    public ResponseEntity<?> updateCartItems(UpdateCartItemsRecord updateCartItemsRecord) {
+        //update customer
+        Customer customer = customerRepository.findById(updateCartItemsRecord.customerId()).get();
+        customer.setCartItems(updateCartItemsRecord.cartItems());
+        customerRepository.save(customer);
+        return ResponseEntity.ok("Cart Items Updated");
     }
 
 

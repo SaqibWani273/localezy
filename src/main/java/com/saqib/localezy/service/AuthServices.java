@@ -43,11 +43,11 @@ public class AuthServices {
     //returns string if error else returns MyUser
     public Object preRegistrationProcess(MyUser myUser) {
         //check if email exists
-        if (myUserRepository.findByEmail(myUser.getEmail()) != null) {
+        if (myUserRepository.findByEmail(myUser.getEmail()).isPresent()) {
 
             return "Email already exists";
         }
-        if(myUserRepository.findByUsername(myUser.getUsername())!=null){
+        if(myUserRepository.findByUsername(myUser.getUsername()).isPresent()){
 
             return "Username already exists";
         }

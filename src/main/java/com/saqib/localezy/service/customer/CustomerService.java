@@ -7,6 +7,8 @@ import com.saqib.localezy.record.UpdateCartItemsRecord;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface CustomerService {
 
@@ -31,6 +33,6 @@ public interface CustomerService {
     ResponseEntity<?> updateCustomer(Customer customer);
 
     ResponseEntity<?> updateCartItems(UpdateCartItemsRecord updateCartItemsRecord);
-
+ResponseEntity<?> fetchProdcutsByIds(List<Long> ids);
 
 }

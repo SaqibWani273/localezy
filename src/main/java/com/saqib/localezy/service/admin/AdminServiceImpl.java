@@ -66,7 +66,7 @@ public class AdminServiceImpl implements AdminService {
             admin.setMyUser(adminPasswordRecord.myUser());
             adminRepository.save(admin);
             //send email verification
-            return authServices.sendEmail(myUser, "Click on http://localhost:8080/admin/verify-email?token=");
+            return authServices.sendEmail(myUser, "admin/verify-email?token=");
         }
 
         return ResponseEntity.badRequest().body("Invalid Secret Code");

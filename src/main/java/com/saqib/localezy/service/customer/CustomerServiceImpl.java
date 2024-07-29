@@ -8,11 +8,13 @@ import com.saqib.localezy.service.AuthServices;
 import com.saqib.localezy.service.MyUserDetailsService;
 import com.saqib.localezy.service.jwt.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -129,6 +131,12 @@ return authServices.sendEmail(myUser,"customer/verify-email?token=");
         customer.setCartItems(updateCartItemsRecord.cartItems());
         customerRepository.save(customer);
         return ResponseEntity.ok("Cart Items Updated");
+    }
+
+    @Override
+    public ResponseEntity<?> fetchProdcutsByIds(List<Long> ids) {
+        List<Product> products = productRepository.findAllById(ids);
+        return ResponseEntity.ok(products);
     }
 
 

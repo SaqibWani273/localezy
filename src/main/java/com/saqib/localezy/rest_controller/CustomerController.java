@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
@@ -67,6 +70,10 @@ public class CustomerController {
     @PostMapping("/update-cart-items")
     public ResponseEntity<?> updateCartItems(@RequestBody UpdateCartItemsRecord updateCartItemsRecord) {
         return customerService.updateCartItems(updateCartItemsRecord);
+    }
+    @PostMapping("/get-products-by-ids")
+    public ResponseEntity<?> getProductsByIds(@RequestBody Map<String, List<Long>> idsMap) {
+        return customerService.fetchProdcutsByIds(idsMap.get("productIds"));
     }
 
 }
